@@ -1,11 +1,12 @@
 # Normal dispersion of air and glass
 # 2019年5月6日
+# 2019年5月12日 加入了色散 
 import numpy as np
 import matplotlib.pyplot as plt
 
-
+DataNum = 100000
 # Wavelength in nm
-LambdaVacShow = np.linspace(.20, 3000000, 1000000)
+LambdaVacShow = np.linspace(10, 700, DataNum)
 LambdaVac = LambdaVacShow*1E-9
 Frequency = 299792458./LambdaVac
 # FrequencyShow in THz
@@ -30,26 +31,65 @@ ComRefractiveIndex = np.sqrt(ComRefractiveIndex2)
 RealRefractiveIndex = np.real(ComRefractiveIndex)
 ImagRefractiveIndex = np.imag(ComRefractiveIndex)
 
+# 色散率
+RealDispersionRate = np.zeros([DataNum])
+RealDispersionRate[1:DataNum] = np.diff(RealRefractiveIndex) / np.diff(LambdaVac)  # in m-1
+RealDispersionRate[0] = RealDispersionRate[1]
+RealDispersionRateShow = RealDispersionRate * 1E-12  # in pm-1
+
+ImagDispersionRate = np.zeros([DataNum])
+ImagDispersionRate[1:DataNum] = np.diff(ImagRefractiveIndex) / np.diff(LambdaVac)  # in m-1
+ImagDispersionRate[0] = ImagDispersionRate[1]
+ImagDispersionRateShow = ImagDispersionRate * 1E-12  # in pm-1
+
+plt.subplot(2, 2, 1)
 # 线性坐标
-# plt.plot(LambdaVacShow, RealRefractiveIndex)
-# plt.plot(LambdaVacShow, ImagRefractiveIndex)
+plt.plot(LambdaVacShow, RealRefractiveIndex)
 
 # x对数坐标
-plt.semilogx(LambdaVacShow, RealRefractiveIndex)
-plt.semilogx(LambdaVacShow, ImagRefractiveIndex)
+# plt.semilogx(LambdaVacShow, RealRefractiveIndex)
 
 # 双对数坐标
 # plt.loglog(LambdaVacShow, RealRefractiveIndex)
-# plt.loglog(LambdaVacShow, ImagRefractiveIndex)
 
 plt.xlabel('Wavelength (nm)', fontsize=14, color='k')
-plt.ylabel('Complex Refractive Index', fontsize=14, color='k')
+plt.ylabel('n', fontsize=14, color='k')
 # plt.ylabel(r'w (pm$^{-1}$)', fontsize=20)
 
 # plt.xlim(20, 30000)
-plt.ylim(0, 3)
+plt.ylim(min(RealRefractiveIndex), max(RealRefractiveIndex))
 
-plt.legend(['n', 'k'], loc='best')
-# plt.legend(['n', 'k'], loc='center')
+plt.legend(['n'], loc='best')
+# plt.legend(['n'], loc='center')
+
+plt.subplot(2, 2, 2)
+# 线性坐标
+plt.plot(LambdaVacShow, ImagRefractiveIndex)
+
+# x对数坐标
+# plt.semilogx(LambdaVacShow, ImagRefractiveIndex)
+
+# 双对数坐标
+# plt.loglog(LambdaVacShow, ImagRefractiveIndex)
+
+plt.xlabel('Wavelength (nm)', fontsize=14, color='k')
+# plt.ylabel('Complex Refractive Index', fontsize=14, color='k')
+plt.ylabel(r'$ \kappa $', fontsize=20)
+
+# plt.xlim(20, 30000)
+plt.ylim(0, max(ImagRefractiveIndex))
+
+plt.legend(['k'], loc='best')
+# plt.legend(['k'], loc='center')
+
+plt.subplot(2, 2, 3)
+plt.plot(LambdaVacShow, RealDispersionRateShow)
+plt.ylabel(r'$ d n / d \lambda (pm ^{-1})$', fontsize=12)
+plt.xlabel('Wavelength (nm)', fontsize=14, color='k')
+
+plt.subplot(2, 2, 4)
+plt.plot(LambdaVacShow, ImagDispersionRateShow)
+plt.xlabel('Wavelength (nm)', fontsize=14, color='k')
+plt.ylabel(r'$ d \kappa / d \lambda (pm ^{-1})$', fontsize=12)
 
 plt.show()
