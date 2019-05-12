@@ -1,3 +1,4 @@
+# 2019年5月12日 通过正则表达式来提取数字
 import serial
 import time
 from time import sleep
