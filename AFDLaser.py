@@ -1,5 +1,6 @@
 # laser frequency stablization
 # 2019年5月15日
+# Show The principle for laser frequency stabliaztion with two AFD
 
 import numpy as np
 import matplotlib.pyplot as plt
